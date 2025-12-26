@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "go-service.fullname" . }}
+  labels:
+    {{- include "go-service.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "go-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "go-service.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: REDIS_URL
+              value: "my-release-redis-master.metrics.svc.cluster.local:6379"
+            - name: REDIS_PASSWORD
+              value: "oV6vB7zuLG"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
