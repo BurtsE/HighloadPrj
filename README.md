@@ -11,4 +11,5 @@
 
  - Деплой
    - helm install go-service ./deploy/helm/service --namespace metrics 
+
 Требуется предварительная установка Redis, настройка подключения в конфигурационных файлах
